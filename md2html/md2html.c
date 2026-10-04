@@ -28,17 +28,17 @@
 #include <string.h>
 #include <time.h>
 
-#include "md4c-html.h"
+#include "enrmrkd-html.h"
 #include "cmdline.h"
 
 
 
 /* Global options. */
 static unsigned parser_flags = 0;
-#ifndef MD4C_USE_ASCII
-    static unsigned renderer_flags = MD_HTML_FLAG_DEBUG | MD_HTML_FLAG_SKIP_UTF8_BOM;
+#ifndef ENRMRKD_USE_ASCII
+    static unsigned renderer_flags = ENRMRKD_HTML_FLAG_DEBUG | ENRMRKD_HTML_FLAG_SKIP_UTF8_BOM;
 #else
-    static unsigned renderer_flags = MD_HTML_FLAG_DEBUG;
+    static unsigned renderer_flags = ENRMRKD_HTML_FLAG_DEBUG;
 #endif
 static int want_fullhtml = 0;
 static int want_xhtml = 0;
@@ -66,7 +66,7 @@ struct membuffer {
 };
 
 static void
-membuf_init(struct membuffer* buf, MD_SIZE new_asize)
+membuf_init(struct membuffer* buf, ENRMRKD_SIZE new_asize)
 {
     buf->size = 0;
     buf->asize = new_asize;
@@ -96,7 +96,7 @@ membuf_grow(struct membuffer* buf, size_t new_asize)
 }
 
 static void
-membuf_append(struct membuffer* buf, const char* data, MD_SIZE size)
+membuf_append(struct membuffer* buf, const char* data, ENRMRKD_SIZE size)
 {
     if(size > (size_t)-1 - buf->size) {
         fprintf(stderr, "membuf_append: size overflow.\n");
@@ -118,7 +118,7 @@ membuf_append(struct membuffer* buf, const char* data, MD_SIZE size)
  **********************/
 
 static void
-process_output(const MD_CHAR* text, MD_SIZE size, void* userdata)
+process_output(const ENRMRKD_CHAR* text, ENRMRKD_SIZE size, void* userdata)
 {
     membuf_append((struct membuffer*) userdata, text, size);
 }
@@ -149,7 +149,7 @@ process_file(const char* in_path, FILE* in, FILE* out)
 
     /* Input size is good estimation of output size. Add some more reserve to
      * deal with the HTML header/footer and tags. */
-    membuf_init(&buf_out, (MD_SIZE)(buf_in.size + buf_in.size/8 + 64));
+    membuf_init(&buf_out, (ENRMRKD_SIZE)(buf_in.size + buf_in.size/8 + 64));
 
     /* Special mode for reproducing a test case found with a fuzzing tool.
      * We assume file the same file format as produced by the fuzzer implemented
@@ -163,7 +163,7 @@ process_file(const char* in_path, FILE* in, FILE* out)
 
         /* Override parser and renderer flags with those from the test case. */
         p_flags = ((unsigned*)buf_in.data)[0];
-        r_flags = ((unsigned*)buf_in.data)[1] | MD_HTML_FLAG_DEBUG;
+        r_flags = ((unsigned*)buf_in.data)[1] | ENRMRKD_HTML_FLAG_DEBUG;
 
         /* And get rid of them from the text input to the parser. */
         memmove(buf_in.data, buf_in.data + 2 * sizeof(unsigned),
@@ -175,7 +175,7 @@ process_file(const char* in_path, FILE* in, FILE* out)
      * md_renderer_t structure. */
     t0 = clock();
 
-    ret = md_html(buf_in.data, (MD_SIZE)buf_in.size, process_output,
+    ret = enrmrkd_html(buf_in.data, (ENRMRKD_SIZE)buf_in.size, process_output,
                 (void*) &buf_out, p_flags, r_flags);
 
     t1 = clock();
@@ -198,7 +198,7 @@ process_file(const char* in_path, FILE* in, FILE* out)
         fprintf(out, "<head>\n");
         fprintf(out, "<title>%s</title>\n", html_title ? html_title : "");
         fprintf(out, "<meta name=\"generator\" content=\"md2html\"%s>\n", want_xhtml ? " /" : "");
-#if !defined MD4C_USE_ASCII && !defined MD4C_USE_UTF16
+#if !defined ENRMRKD_USE_ASCII && !defined ENRMRKD_USE_UTF16
         fprintf(out, "<meta charset=\"UTF-8\"%s>\n", want_xhtml ? " /" : "");
 #endif
         if(css_path != NULL) {
@@ -382,7 +382,7 @@ cmdline_callback(int opt, char const* value, void* data)
 
         case 'o':   output_path = value; break;
         case 'f':   want_fullhtml = 1; break;
-        case 'x':   want_xhtml = 1; renderer_flags |= MD_HTML_FLAG_XHTML; break;
+        case 'x':   want_xhtml = 1; renderer_flags |= ENRMRKD_HTML_FLAG_XHTML; break;
         case 's':   want_stat = 1; break;
         case 'r':   want_replay_fuzz = 1; break;
         case 'h':   usage(); exit(EXIT_SUCCESS); break;
@@ -391,35 +391,35 @@ cmdline_callback(int opt, char const* value, void* data)
         case '1':   html_title = value; break;
         case '2':   css_path = value; break;
 
-        case 'c':   parser_flags |= MD_DIALECT_COMMONMARK; break;
-        case 'g':   parser_flags |= MD_DIALECT_GITHUB; break;
+        case 'c':   parser_flags |= ENRMRKD_DIALECT_COMMONMARK; break;
+        case 'g':   parser_flags |= ENRMRKD_DIALECT_GITHUB; break;
 
-        case 'D':   parser_flags |= MD_FLAG_ADMONITIONS; break;
-        case 'E':   renderer_flags |= MD_HTML_FLAG_VERBATIM_ENTITIES; break;
-        case 'M':   parser_flags |= MD_FLAG_HIGHLIGHT; break;
-        case 'C':   parser_flags |= MD_FLAG_INSERT; break;
-        case 'A':   parser_flags |= MD_FLAG_PERMISSIVEATXHEADERS; break;
-        case 'I':   parser_flags |= MD_FLAG_NOINDENTEDCODEBLOCKS; break;
-        case 'F':   parser_flags |= MD_FLAG_NOHTMLBLOCKS; break;
-        case 'G':   parser_flags |= MD_FLAG_NOHTMLSPANS; break;
-        case 'H':   parser_flags |= MD_FLAG_NOHTML; break;
-        case 'W':   parser_flags |= MD_FLAG_COLLAPSEWHITESPACE; break;
-        case 'U':   parser_flags |= MD_FLAG_PERMISSIVEURLAUTOLINKS; break;
-        case '.':   parser_flags |= MD_FLAG_PERMISSIVEWWWAUTOLINKS; break;
-        case '@':   parser_flags |= MD_FLAG_PERMISSIVEEMAILAUTOLINKS; break;
-        case 'V':   parser_flags |= MD_FLAG_PERMISSIVEAUTOLINKS; break;
-        case 'T':   parser_flags |= MD_FLAG_TABLES; break;
-        case 'P':   parser_flags |= MD_FLAG_SPOILERS; break;
-        case 'S':   parser_flags |= MD_FLAG_STRIKETHROUGH; break;
-        case '^':   parser_flags |= MD_FLAG_SUPERSCRIPTS; break;
-        case '~':   parser_flags |= MD_FLAG_SUBSCRIPTS; break;
-        case 'L':   parser_flags |= MD_FLAG_LATEXMATHSPANS; break;
-        case 'K':   parser_flags |= MD_FLAG_WIKILINKS; break;
-        case 'X':   parser_flags |= MD_FLAG_TASKLISTS; break;
-        case '_':   parser_flags |= MD_FLAG_UNDERLINE; break;
-        case 'N':   parser_flags |= MD_FLAG_FOOTNOTES; break;
-        case 'B':   parser_flags |= MD_FLAG_HARD_SOFT_BREAKS; break;
-        case 'Y':   parser_flags |= MD_FLAG_PRESERVEBLANKLINES; break;
+        case 'D':   parser_flags |= ENRMRKD_FLAG_ADMONITIONS; break;
+        case 'E':   renderer_flags |= ENRMRKD_HTML_FLAG_VERBATIM_ENTITIES; break;
+        case 'M':   parser_flags |= ENRMRKD_FLAG_HIGHLIGHT; break;
+        case 'C':   parser_flags |= ENRMRKD_FLAG_INSERT; break;
+        case 'A':   parser_flags |= ENRMRKD_FLAG_PERMISSIVEATXHEADERS; break;
+        case 'I':   parser_flags |= ENRMRKD_FLAG_NOINDENTEDCODEBLOCKS; break;
+        case 'F':   parser_flags |= ENRMRKD_FLAG_NOHTMLBLOCKS; break;
+        case 'G':   parser_flags |= ENRMRKD_FLAG_NOHTMLSPANS; break;
+        case 'H':   parser_flags |= ENRMRKD_FLAG_NOHTML; break;
+        case 'W':   parser_flags |= ENRMRKD_FLAG_COLLAPSEWHITESPACE; break;
+        case 'U':   parser_flags |= ENRMRKD_FLAG_PERMISSIVEURLAUTOLINKS; break;
+        case '.':   parser_flags |= ENRMRKD_FLAG_PERMISSIVEWWWAUTOLINKS; break;
+        case '@':   parser_flags |= ENRMRKD_FLAG_PERMISSIVEEMAILAUTOLINKS; break;
+        case 'V':   parser_flags |= ENRMRKD_FLAG_PERMISSIVEAUTOLINKS; break;
+        case 'T':   parser_flags |= ENRMRKD_FLAG_TABLES; break;
+        case 'P':   parser_flags |= ENRMRKD_FLAG_SPOILERS; break;
+        case 'S':   parser_flags |= ENRMRKD_FLAG_STRIKETHROUGH; break;
+        case '^':   parser_flags |= ENRMRKD_FLAG_SUPERSCRIPTS; break;
+        case '~':   parser_flags |= ENRMRKD_FLAG_SUBSCRIPTS; break;
+        case 'L':   parser_flags |= ENRMRKD_FLAG_LATEXMATHSPANS; break;
+        case 'K':   parser_flags |= ENRMRKD_FLAG_WIKILINKS; break;
+        case 'X':   parser_flags |= ENRMRKD_FLAG_TASKLISTS; break;
+        case '_':   parser_flags |= ENRMRKD_FLAG_UNDERLINE; break;
+        case 'N':   parser_flags |= ENRMRKD_FLAG_FOOTNOTES; break;
+        case 'B':   parser_flags |= ENRMRKD_FLAG_HARD_SOFT_BREAKS; break;
+        case 'Y':   parser_flags |= ENRMRKD_FLAG_PRESERVEBLANKLINES; break;
 
         default:
             fprintf(stderr, "Illegal option: %s\n", value);

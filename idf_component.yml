@@ -1,6 +1,6 @@
 version: "0.6.0"
 description: "Fast, SAX-like Markdown parser implementation in C compliant with the CommonMark specification."
-url: "https://github.com/mity/md4c"
+url: "https://github.com/software-mansion-labs/md4c"
 maintainers:
   - "Martin Mitáš <https://github.com/mity>"
 targets:

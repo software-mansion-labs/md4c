@@ -93,3 +93,10 @@ msbuild.wrn
 
 # PlatformIO build dir
 .pio/
+
+# ---> In-tree build outputs
+# CI (and the README's build recipe) configures CMake directly in the source
+# tree, which leaves these next to their inputs rather than in a build dir.
+*.pc
+*.expected
+/md2html/md2html

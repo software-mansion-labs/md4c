@@ -1,7 +1,7 @@
 
 # Highlight Spans
 
-With the flag `MD_FLAG_HIGHLIGHT`, MD4C enables recognition of inline
+With the flag `ENRMRKD_FLAG_HIGHLIGHT`, MD4C enables recognition of inline
 highlight spans using the `==text==` syntax. A pair of equals signs on each
 side wraps the content, which the HTML renderer outputs as `<mark>`.
 
@@ -39,7 +39,7 @@ Multiple independent highlight spans may appear in the same paragraph:
 
 ## Flag required
 
-Without `MD_FLAG_HIGHLIGHT` the `==` sequence is treated as literal text:
+Without `ENRMRKD_FLAG_HIGHLIGHT` the `==` sequence is treated as literal text:
 
 ```````````````````````````````` example
 ==highlight==

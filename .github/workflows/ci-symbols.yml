@@ -1,0 +1,21 @@
+name: Exported Symbols
+
+on:
+  - pull_request
+  - push
+
+jobs:
+  # The fork's public symbols have to stay prefixed, otherwise an application
+  # embedding it alongside another copy of MD4C fails to link. See
+  # scripts/check-exported-symbols.sh.
+  exported-symbols:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -DCMAKE_BUILD_TYPE=Release -G 'Unix Makefiles' .
+      - name: Build
+        run: make
+      - name: Check exported symbols
+        run: ./scripts/check-exported-symbols.sh

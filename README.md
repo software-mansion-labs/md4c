@@ -7,6 +7,16 @@
 
 MD4C stands for "Markdown for C" and that's exactly what this project is about.
 
+This repository is the Software Mansion fork of MD4C, embedded into
+[enriched-markdown](https://github.com/software-mansion/enriched-markdown). An
+application can link another copy of MD4C at the same time, so everything the
+fork exposes carries an `ENRMRKD_` / `enrmrkd_` prefix instead of upstream's
+`MD_` / `md_` one, and the headers are named `enrmrkd.h`, `enrmrkd-html.h` and
+`enrmrkd-entity.h`. Upstream names (`md_parse()`, `MD_FLAG_TABLES`, `md4c.h`, …)
+therefore do not exist here; see `scripts/rename-upstream-symbols.pl`, which
+applies the mapping and is re-runnable after merging new code from upstream.
+File-local names inside the parser are left as upstream, as they cannot clash.
+
 
 ## What is Markdown
 
@@ -34,7 +44,7 @@ MD4C is a Markdown parser implementation in C, with the following features:
   file. There are no dependencies other than standard C library.
 
 * **Embedding:** MD4C parser is easy to reuse in other projects, its API is
-  very straightforward: There is actually just one function, `md_parse()`.
+  very straightforward: There is actually just one function, `enrmrkd_parse()`.
 
 * **Push model:** MD4C parses the complete document and calls few callback
   functions provided by the application to inform it about a start/end of
@@ -57,16 +67,16 @@ MD4C is a Markdown parser implementation in C, with the following features:
 
 ### Parsing Markdown
 
-If you need just to parse a Markdown document, you need to include `md4c.h`
-and link against MD4C library (`-lmd4c`); or alternatively add `md4c.[hc]`
+If you need just to parse a Markdown document, you need to include `enrmrkd.h`
+and link against the parser library (`-lenrmrkd`); or alternatively add `enrmrkd.[hc]`
 directly to your code base as the parser is only implemented in the single C
 source file.
 
-The main provided function is `md_parse()`. It takes a text in the Markdown
+The main provided function is `enrmrkd_parse()`. It takes a text in the Markdown
 syntax and a pointer to a structure which provides pointers to several callback
 functions.
 
-As `md_parse()` processes the input, it calls the callbacks (when entering or
+As `enrmrkd_parse()` processes the input, it calls the callbacks (when entering or
 leaving any Markdown block or span; and when outputting any textual content of
 the document), allowing application to convert it into another format or render
 it onto the screen.
@@ -74,11 +84,11 @@ it onto the screen.
 
 ### Converting to HTML
 
-If you need to convert Markdown to HTML, include `md4c-html.h` and link against
-MD4C-HTML library (`-lmd4c-html`); or alternatively add the sources `md4c.[hc]`,
-`md4c-html.[hc]` and `entity.[hc]` into your code base.
+If you need to convert Markdown to HTML, include `enrmrkd-html.h` and link against
+the HTML renderer library (`-lenrmrkd-html`); or alternatively add the sources `enrmrkd.[hc]`,
+`enrmrkd-html.[hc]` and `enrmrkd-entity.[hc]` into your code base.
 
-To convert a Markdown input, call `md_html()` function. It takes the Markdown
+To convert a Markdown input, call `enrmrkd_html()` function. It takes the Markdown
 input and calls the provided callback function. The callback is fed with
 chunks of the HTML output. Typical callback implementation just appends the
 chunks into a buffer or writes them to a file.
@@ -92,82 +102,82 @@ The default behavior is to recognize only Markdown syntax defined by the
 However, with appropriate flags, the behavior can be tuned to enable some
 extensions:
 
-* With the flag `MD_FLAG_ADMONITIONS`, GitHub-style admonitions are recognized.
+* With the flag `ENRMRKD_FLAG_ADMONITIONS`, GitHub-style admonitions are recognized.
 
-* With the flag `MD_FLAG_COLLAPSEWHITESPACE`, a non-trivial whitespace is
+* With the flag `ENRMRKD_FLAG_COLLAPSEWHITESPACE`, a non-trivial whitespace is
   collapsed into a single space.
 
-* With the flag `MD_FLAG_FOOTNOTES`, footnote references and definitions are
+* With the flag `ENRMRKD_FLAG_FOOTNOTES`, footnote references and definitions are
   supported (e.g. `[^note]` and `[^note]: Footnote text`). Referenced
   definitions are emitted at the end of the document in first-reference order.
 
-* With the flag `MD_FLAG_HARD_SOFT_BREAKS`, all soft breaks (newlines) in the
+* With the flag `ENRMRKD_FLAG_HARD_SOFT_BREAKS`, all soft breaks (newlines) in the
   Markdown input are treated as hard breaks (i.e. as `<br>` in HTML output).
 
-* With the flag `MD_FLAG_HIGHLIGHT`, highlight spans are enabled
+* With the flag `ENRMRKD_FLAG_HIGHLIGHT`, highlight spans are enabled
   (text enclosed in double equals marks, e.g. `==important==`). The HTML
   renderer outputs `<mark>`.
 
-* With the flag `MD_FLAG_INSERT`, insert spans are enabled
+* With the flag `ENRMRKD_FLAG_INSERT`, insert spans are enabled
   (text enclosed in double plus marks, e.g. `++foo bar++`). The HTML
   renderer outputs `<ins>`.
 
-* With the flag `MD_FLAG_LATEXMATHSPANS`, LaTeX math spans (`$...$`) and
+* With the flag `ENRMRKD_FLAG_LATEXMATHSPANS`, LaTeX math spans (`$...$`) and
   LaTeX display math spans (`$$...$$`) are supported. (Note though that the
   HTML renderer outputs them verbatim in a custom tag `<x-equation>`.)
 
-* With the flag `MD_FLAG_PERMISSIVEATXHEADERS`, the delimiting space is
+* With the flag `ENRMRKD_FLAG_PERMISSIVEATXHEADERS`, the delimiting space is
   not required with ATX headers
 
-* With the flag `MD_FLAG_PERMISSIVEEMAILAUTOLINKS`, permissive e-mail
+* With the flag `ENRMRKD_FLAG_PERMISSIVEEMAILAUTOLINKS`, permissive e-mail
   autolinks (not enclosed in `<` and `>`) are supported.
 
-* With the flag `MD_FLAG_PERMISSIVEURLAUTOLINKS`, permissive URL autolinks
+* With the flag `ENRMRKD_FLAG_PERMISSIVEURLAUTOLINKS`, permissive URL autolinks
   (not enclosed in `<` and `>`) are supported.
 
-* With the flag `MD_FLAG_PERMISSIVEWWWAUTOLINKS`, permissive WWW autolinks
+* With the flag `ENRMRKD_FLAG_PERMISSIVEWWWAUTOLINKS`, permissive WWW autolinks
   without any scheme specified (e.g. `www.example.com`) are supported. MD4C
   then assumes `http:` scheme.
 
-* With the flag `MD_FLAG_PRESERVEBLANKLINES`, each run of blank lines between
-  blocks is reported as a `MD_BLOCK_BLANK` carrying the number of blank lines,
+* With the flag `ENRMRKD_FLAG_PRESERVEBLANKLINES`, each run of blank lines between
+  blocks is reported as a `ENRMRKD_BLOCK_BLANK` carrying the number of blank lines,
   instead of being collapsed into a single block boundary. This is a deviation
   from CommonMark, intended for WYSIWYG-like applications.
 
-* With the flag `MD_FLAG_SPOILERS`, spoiler spans are enabled
+* With the flag `ENRMRKD_FLAG_SPOILERS`, spoiler spans are enabled
   (text enclosed in double pipe marks, e.g. `||hidden text||`). (Note that
   the HTML renderer outputs them in a custom tag `<x-spoiler>`.)
 
-* With the flag `MD_FLAG_STRIKETHROUGH`, strike-through spans are enabled
+* With the flag `ENRMRKD_FLAG_STRIKETHROUGH`, strike-through spans are enabled
   (text enclosed in tilde marks, e.g. `~~foo bar~~`).
 
-* With the flag `MD_FLAG_SUBSCRIPTS`, subscript spans are enabled
+* With the flag `ENRMRKD_FLAG_SUBSCRIPTS`, subscript spans are enabled
   (text enclosed in single tilde marks, e.g. `H~2~O`). The HTML renderer
-  outputs `<sub>`. When used together with `MD_FLAG_STRIKETHROUGH`, single
+  outputs `<sub>`. When used together with `ENRMRKD_FLAG_STRIKETHROUGH`, single
   tilde renders as subscript and double tilde `~~text~~` as strikethrough.
 
-* With the flag `MD_FLAG_SUPERSCRIPTS`, superscript spans are enabled
+* With the flag `ENRMRKD_FLAG_SUPERSCRIPTS`, superscript spans are enabled
   (text enclosed in caret marks, e.g. `x^2^`). The HTML renderer outputs
   `<sup>`.
 
-* With the flag `MD_FLAG_TABLES`, GitHub-style tables are supported.
+* With the flag `ENRMRKD_FLAG_TABLES`, GitHub-style tables are supported.
 
-* With the flag `MD_FLAG_TASKLISTS`, GitHub-style task lists are supported.
+* With the flag `ENRMRKD_FLAG_TASKLISTS`, GitHub-style task lists are supported.
 
-* With the flag `MD_FLAG_UNDERLINE`, underscore (`_`) denotes an underline
+* With the flag `ENRMRKD_FLAG_UNDERLINE`, underscore (`_`) denotes an underline
   instead of an ordinary emphasis or strong emphasis.
 
-* With the flag `MD_FLAG_WIKILINKS`, wiki-style links (`[[link label]]` and
+* With the flag `ENRMRKD_FLAG_WIKILINKS`, wiki-style links (`[[link label]]` and
   `[[target article|link label]]`) are supported. (Note that the HTML renderer
   outputs them in a custom tag `<x-wikilink>`.)
 
 Few features of CommonMark (those some people see as mis-features) may be
 disabled with the following flags:
 
-* With the flag `MD_FLAG_NOHTMLSPANS` or `MD_FLAG_NOHTMLBLOCKS`, raw inline
+* With the flag `ENRMRKD_FLAG_NOHTMLSPANS` or `ENRMRKD_FLAG_NOHTMLBLOCKS`, raw inline
   HTML or raw HTML blocks respectively are disabled.
 
-* With the flag `MD_FLAG_NOINDENTEDCODEBLOCKS`, indented code blocks are
+* With the flag `ENRMRKD_FLAG_NOINDENTEDCODEBLOCKS`, indented code blocks are
   disabled.
 
 
@@ -207,25 +217,25 @@ The two situations (word boundary detection and link reference matching) where
 MD4C has to understand Unicode are handled as specified by the following
 preprocessor macros (as specified at the time MD4C is being built):
 
-* If preprocessor macro `MD4C_USE_UTF8` is defined, MD4C assumes UTF-8 for the
+* If preprocessor macro `ENRMRKD_USE_UTF8` is defined, MD4C assumes UTF-8 for the
   word boundary detection and for the case-insensitive matching of link labels.
 
   When none of these macros is explicitly used, this is the default behavior.
 
-* On Windows, if preprocessor macro `MD4C_USE_UTF16` is defined, MD4C uses
+* On Windows, if preprocessor macro `ENRMRKD_USE_UTF16` is defined, MD4C uses
   `WCHAR` instead of `char` and assumes UTF-16 encoding in those situations.
   (UTF-16 is what Windows developers usually call just "Unicode" and what
   Win32API generally works with.)
 
-  Note that because this macro affects also the types in `md4c.h`, you have
+  Note that because this macro affects also the types in `enrmrkd.h`, you have
   to define the macro both when building MD4C as well as when including
-  `md4c.h`.
+  `enrmrkd.h`.
 
-  Also note this is only supported in the parser (`md4c.[hc]`). The HTML
+  Also note this is only supported in the parser (`enrmrkd.[hc]`). The HTML
   renderer does not support this and you will have to write your own custom
   renderer to use this feature.
 
-* If preprocessor macro `MD4C_USE_ASCII` is defined, MD4C assumes nothing but
+* If preprocessor macro `ENRMRKD_USE_ASCII` is defined, MD4C assumes nothing but
   an ASCII input.
 
   That effectively means that non-ASCII whitespace or punctuation characters
@@ -235,8 +245,8 @@ preprocessor macros (as specified at the time MD4C is being built):
 
 ## Documentation
 
-The API of the parser is quite well documented in the comments in the `md4c.h`.
-Similarly, the markdown-to-html API is described in its header `md4c-html.h`.
+The API of the parser is quite well documented in the comments in the `enrmrkd.h`.
+Similarly, the markdown-to-html API is described in its header `enrmrkd-html.h`.
 
 There is also a [project wiki](https://github.com/mity/md4c/wiki) which provides
 some more comprehensive documentation. However, note it is incomplete and some

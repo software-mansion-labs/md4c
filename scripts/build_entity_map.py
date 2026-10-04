@@ -32,6 +32,6 @@ for name in entities:
 
 records.sort()
 
-sys.stdout.write("static const ENTITY ENTITY_MAP[] = {\n")
+sys.stdout.write("static const ENRMRKD_ENTITY ENRMRKD_ENTITY_MAP[] = {\n")
 sys.stdout.write(",\n".join(records))
 sys.stdout.write("\n};\n\n")

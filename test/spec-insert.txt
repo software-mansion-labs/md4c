@@ -1,7 +1,7 @@
 
 # Insert
 
-With the flag `MD_FLAG_INSERT`, MD4C enables recognition of insert spans
+With the flag `ENRMRKD_FLAG_INSERT`, MD4C enables recognition of insert spans
 using the `++text++` syntax. A pair of plus signs on each side wraps
 the content, which the HTML renderer outputs as `<ins>`.
 
@@ -39,7 +39,7 @@ colo++u++r
 
 ## Opt-in behavior / Flag required
 
-Without `MD_FLAG_INSERT` the `++` sequence is treated as literal text:
+Without `ENRMRKD_FLAG_INSERT` the `++` sequence is treated as literal text:
 
 ```````````````````````````````` example
 ++insert++
@@ -247,7 +247,7 @@ Insert may appear inside table cells:
 --finsert --ftables
 ````````````````````````````````
 
-### Spoilers (requires `MD_FLAG_SPOILERS`)
+### Spoilers (requires `ENRMRKD_FLAG_SPOILERS`)
 
 Insert may appear inside a spoiler span:
 

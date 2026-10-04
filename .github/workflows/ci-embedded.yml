@@ -45,7 +45,7 @@ jobs:
         if: steps.idf-cache.outputs.cache-hit == 'true'
         run: docker load -i ~/.cache/esp-idf-docker/idf.tar
 
-      - name: Scaffold project and build md4c as a component
+      - name: Scaffold project and build enrmrkd as a component
         uses: espressif/esp-idf-ci-action@v1
         with:
           esp_idf_version: release-v5.5
@@ -53,7 +53,7 @@ jobs:
           command: |
             idf.py create-project smoke \
               && mkdir -p smoke/components \
-              && ln -s ../.. smoke/components/md4c \
+              && ln -s ../.. smoke/components/enrmrkd \
               && cd smoke \
               && idf.py build
 
@@ -81,7 +81,7 @@ jobs:
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
 
-      - name: Compile md4c with the ${{ matrix.framework }} framework
+      - name: Compile enrmrkd with the ${{ matrix.framework }} framework
         run: >-
           pio ci test/embedded/smoke.cpp --board=esp32dev --lib=.
           -O framework=${{ matrix.framework }}

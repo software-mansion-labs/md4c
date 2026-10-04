@@ -1,7 +1,7 @@
 
 # Spoiler Spans
 
-With the flag `MD_FLAG_SPOILERS`, MD4C enables recognition of inline spoiler
+With the flag `ENRMRKD_FLAG_SPOILERS`, MD4C enables recognition of inline spoiler
 spans using the `||text||` syntax (popularized by Telegram and Discord).
 
 A spoiler span is content wrapped in exactly two consecutive pipe characters
@@ -54,7 +54,7 @@ A spoiler span at the very start and end of a paragraph:
 
 ## Flag required
 
-Without `MD_FLAG_SPOILERS` the `||` sequence is treated as literal text:
+Without `ENRMRKD_FLAG_SPOILERS` the `||` sequence is treated as literal text:
 
 ```````````````````````````````` example
 ||hidden||
@@ -329,7 +329,7 @@ Nested block quotes:
 --fspoilers
 ````````````````````````````````
 
-### Task lists (requires `MD_FLAG_TASKLISTS`)
+### Task lists (requires `ENRMRKD_FLAG_TASKLISTS`)
 
 ```````````````````````````````` example
 - [ ] ||task item spoiler||
@@ -343,7 +343,7 @@ Nested block quotes:
 --fspoilers --ftasklists
 ````````````````````````````````
 
-### Tables (requires `MD_FLAG_TABLES`)
+### Tables (requires `ENRMRKD_FLAG_TABLES`)
 
 > [!WARNING] Consider this experimental feature for now, which can possibly
 > be removed as it creates incompatibility with Github Flavored Markdown (GFM)
@@ -414,7 +414,7 @@ retained:
 
 ## Interaction with other extensions
 
-### Wiki-links (requires `MD_FLAG_WIKILINKS`)
+### Wiki-links (requires `ENRMRKD_FLAG_WIKILINKS`)
 
 It's possible to use spoilers inside the wiki-link label:
 

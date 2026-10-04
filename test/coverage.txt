@@ -286,7 +286,7 @@ main(int argc, char** argv)
 ~~~
 
 
-## Flag `MD_FLAG_COLLAPSEWHITESPACE`
+## Flag `ENRMRKD_FLAG_COLLAPSEWHITESPACE`
 
 ```````````````````````````````` example
 foo  bar → baz
@@ -297,7 +297,7 @@ foo  bar → baz
 ````````````````````````````````
 
 
-## Flag `MD_FLAG_PRESERVEBLANKLINES`
+## Flag `ENRMRKD_FLAG_PRESERVEBLANKLINES`
 
 A closing code fence is internally retyped as a blank line but still holds its
 text, so it must not be counted as a blank line separation.

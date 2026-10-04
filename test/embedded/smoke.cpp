@@ -10,12 +10,12 @@
 #include "freertos/task.h"
 #endif
 
-#include "md4c.h"
-#include "md4c-html.h"
+#include "enrmrkd.h"
+#include "enrmrkd-html.h"
 
 /* Parser never really needs to emit anything; we only verify the library
  * builds and links for the target. */
-static void process_output(const MD_CHAR* chunk, MD_SIZE size, void* userdata)
+static void process_output(const ENRMRKD_CHAR* chunk, ENRMRKD_SIZE size, void* userdata)
 {
     (void)chunk;
     (void)size;
@@ -25,11 +25,11 @@ static void process_output(const MD_CHAR* chunk, MD_SIZE size, void* userdata)
 static void parse_smoke(void)
 {
     const char* src = "# Hello md4c\n";
-    int ret = md_html(src, (MD_SIZE)strlen(src), process_output, NULL,
-                      MD_DIALECT_COMMONMARK, 0);
+    int ret = enrmrkd_html(src, (ENRMRKD_SIZE)strlen(src), process_output, NULL,
+                      ENRMRKD_DIALECT_COMMONMARK, 0);
 
     if(ret < 0) {
-        /* Never reached in CI; kept so the result of md_html() is used. */
+        /* Never reached in CI; kept so the result of enrmrkd_html() is used. */
         while(1) {
         }
     }

@@ -5,8 +5,8 @@ By default MD4C (like CommonMark) treats any run of blank lines between two
 blocks as a single block boundary and discards how many blank lines it
 consisted of.
 
-With the flag `MD_FLAG_PRESERVEBLANKLINES`, each such run is instead reported
-as a single block `MD_BLOCK_BLANK` whose detail (`MD_BLOCK_BLANK_DETAIL`) holds
+With the flag `ENRMRKD_FLAG_PRESERVEBLANKLINES`, each such run is instead reported
+as a single block `ENRMRKD_BLOCK_BLANK` whose detail (`ENRMRKD_BLOCK_BLANK_DETAIL`) holds
 the count of blank lines forming the separation. This lets applications
 reproduce the vertical spacing of the source; it is a deviation from
 CommonMark.
@@ -35,7 +35,7 @@ Paragraph two.
 ````````````````````````````````
 
 An ordinary single blank line separating two blocks is still reported by the
-parser (as a `MD_BLOCK_BLANK` with `line_count` 1), but this renderer shows
+parser (as a `ENRMRKD_BLOCK_BLANK` with `line_count` 1), but this renderer shows
 nothing extra for it, as that first blank line is the block separation already
 implied by the boundary between the two paragraphs:
 
@@ -150,7 +150,7 @@ Blank lines separating two block quotes are reported between them:
 ````````````````````````````````
 
 Blank lines inside a fenced code block are part of its verbatim contents and
-are not reported as `MD_BLOCK_BLANK`:
+are not reported as `ENRMRKD_BLOCK_BLANK`:
 
 ```````````````````````````````` example
 ```
