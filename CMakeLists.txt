@@ -11,9 +11,9 @@ if(IDF_TARGET)
 endif()
 
 if(NOT IDF_TARGET)
-    project(MD4C
+    project(EnrMrkd
         VERSION "0.6.0"
-        HOMEPAGE_URL "https://github.com/mity/md4c"
+        HOMEPAGE_URL "https://github.com/software-mansion-labs/md4c"
         LANGUAGES C
     )
 

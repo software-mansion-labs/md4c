@@ -1,14 +1,14 @@
 
 # Footnote References
 
-With the flag `MD_FLAG_FOOTNOTES`, MD4C enables recognition of footnote
+With the flag `ENRMRKD_FLAG_FOOTNOTES`, MD4C enables recognition of footnote
 references using the `[^label]` syntax and footnote definitions using
 `[^label]: content` at the start of a paragraph.
 
 A footnote reference is a `[^label]` inline span that renders as a numbered
 superscript linked to the corresponding definition.  Definitions are emitted
 at the end of the document, in order of first reference, each wrapped in a
-`MD_BLOCK_FOOTNOTE_DEF` block.  The HTML renderer outputs a `<section
+`ENRMRKD_BLOCK_FOOTNOTE_DEF` block.  The HTML renderer outputs a `<section
 class="footnotes">` wrapper with an `<ol>` list.
 
 
@@ -99,7 +99,7 @@ Note A.<a href="#fnref-2-1" class="footnote-backref">&#8617;</a>
 
 ## Opt-in flag
 
-When `MD_FLAG_FOOTNOTES` is not enabled, `[^label]` is treated as literal
+When `ENRMRKD_FLAG_FOOTNOTES` is not enabled, `[^label]` is treated as literal
 text and `[^label]: content` is treated as a regular paragraph:
 
 ```````````````````````````````` example

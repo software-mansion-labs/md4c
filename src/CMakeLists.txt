@@ -6,52 +6,52 @@ join_paths(PKGCONFIG_INCLUDEDIR "\${prefix}" "${CMAKE_INSTALL_INCLUDEDIR}")
 join_paths(PKGCONFIG_LIBDIR "\${prefix}" "${CMAKE_INSTALL_LIBDIR}")
 
 # Build & install rules for MD4C parser library
-configure_file(md4c.pc.in md4c.pc @ONLY)
-add_library(md4c md4c.c md4c.h)
-target_include_directories(md4c PUBLIC
+configure_file(enrmrkd.pc.in enrmrkd.pc @ONLY)
+add_library(enrmrkd enrmrkd.c enrmrkd.h)
+target_include_directories(enrmrkd PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
-target_compile_definitions(md4c PRIVATE "$<$<CONFIG:Debug>:DEBUG>")
-set_target_properties(md4c PROPERTIES
+target_compile_definitions(enrmrkd PRIVATE "$<$<CONFIG:Debug>:DEBUG>")
+set_target_properties(enrmrkd PROPERTIES
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
-    PUBLIC_HEADER md4c.h
+    PUBLIC_HEADER enrmrkd.h
 )
 install(
-    TARGETS md4c
-    EXPORT md4cConfig
+    TARGETS enrmrkd
+    EXPORT enrmrkdConfig
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/md4c.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/enrmrkd.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # Build & install rules for HTML renderer library
 if(BUILD_HTML_LIBRARY)
-    configure_file(md4c-html.pc.in md4c-html.pc @ONLY)
-    add_library(md4c-html md4c-html.c md4c-html.h entity.c entity.h)
-    target_include_directories(md4c-html PUBLIC
+    configure_file(enrmrkd-html.pc.in enrmrkd-html.pc @ONLY)
+    add_library(enrmrkd-html enrmrkd-html.c enrmrkd-html.h enrmrkd-entity.c enrmrkd-entity.h)
+    target_include_directories(enrmrkd-html PUBLIC
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
     )
-    set_target_properties(md4c-html PROPERTIES
+    set_target_properties(enrmrkd-html PROPERTIES
         VERSION ${PROJECT_VERSION}
         SOVERSION ${PROJECT_VERSION_MAJOR}
-        PUBLIC_HEADER md4c-html.h
+        PUBLIC_HEADER enrmrkd-html.h
     )
-    target_link_libraries(md4c-html PUBLIC md4c)
+    target_link_libraries(enrmrkd-html PUBLIC enrmrkd)
     install(
-        TARGETS md4c-html
-        EXPORT md4cConfig
+        TARGETS enrmrkd-html
+        EXPORT enrmrkdConfig
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/md4c-html.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/enrmrkd-html.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 endif()
 
 # Install rules
-install(EXPORT md4cConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/md4c/ NAMESPACE md4c::)
+install(EXPORT enrmrkdConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/enrmrkd/ NAMESPACE enrmrkd::)

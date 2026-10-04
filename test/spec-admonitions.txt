@@ -1,7 +1,7 @@
 
 # Admonitions
 
-With the flag `MD_FLAG_ADMONITIONS`, MD4C enables extension for recognition of
+With the flag `ENRMRKD_FLAG_ADMONITIONS`, MD4C enables extension for recognition of
 admonitions:
 
 ```````````````````````````````` example

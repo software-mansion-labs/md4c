@@ -1,7 +1,7 @@
 
 # Superscript Spans
 
-With the flag `MD_FLAG_SUPERSCRIPTS`, MD4C enables recognition of inline
+With the flag `ENRMRKD_FLAG_SUPERSCRIPTS`, MD4C enables recognition of inline
 superscript spans using the `^text^` syntax.  A single caret on each side
 wraps the content, which the HTML renderer outputs as `<sup>`.
 
@@ -49,7 +49,7 @@ Superscripts may appear inside strong emphasis:
 
 ## Opt-in behavior
 
-Without `MD_FLAG_SUPERSCRIPTS` the `^` sequence is treated as literal text:
+Without `ENRMRKD_FLAG_SUPERSCRIPTS` the `^` sequence is treated as literal text:
 
 ```````````````````````````````` example
 x^2^
@@ -173,7 +173,7 @@ x2^
 
 ## Interaction with other extensions
 
-### Subscripts (requires `MD_FLAG_SUBSCRIPTS`)
+### Subscripts (requires `ENRMRKD_FLAG_SUBSCRIPTS`)
 
 Superscript and subscript may nest inside each other:
 
@@ -185,7 +185,7 @@ x^a~b~^
 --fsuperscripts --fsubscripts
 ````````````````````````````````
 
-### Spoilers (requires `MD_FLAG_SPOILERS`)
+### Spoilers (requires `ENRMRKD_FLAG_SPOILERS`)
 
 Superscript may appear inside a spoiler span:
 

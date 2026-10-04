@@ -1,5 +1,5 @@
 {
-  "name": "md4c",
+  "name": "enrmrkd",
   "version": "0.6.0",
   "description": "Fast, SAX-like Markdown parser implementation in C compliant with the CommonMark specification.",
   "keywords": [
@@ -16,10 +16,10 @@
     }
   ],
   "license": "MIT",
-  "homepage": "https://github.com/mity/md4c",
+  "homepage": "https://github.com/software-mansion-labs/md4c",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mity/md4c"
+    "url": "https://github.com/software-mansion-labs/md4c"
   },
   "build": {
     "includeDir": "src",
