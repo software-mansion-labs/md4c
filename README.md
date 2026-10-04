@@ -17,6 +17,12 @@ therefore do not exist here; see `scripts/rename-upstream-symbols.pl`, which
 applies the mapping and is re-runnable after merging new code from upstream.
 File-local names inside the parser are left as upstream, as they cannot clash.
 
+The fork also keeps `<video>` in the block-level HTML tag list, which upstream
+reverted in [#428](https://github.com/mity/md4c/pull/428): enriched-markdown
+promotes `<video>` HTML blocks into video nodes, so without the block form a
+`<video>` tag stops rendering as a video. `test/spec-addendum.txt` covers it.
+Both deviations have to survive a merge from upstream.
+
 
 ## What is Markdown
 
