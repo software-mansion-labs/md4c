@@ -48,6 +48,36 @@ preceded with a whitespace:
 ````````````````````````````````
 
 
+Like `*` emphasis, a tilde run that is punctuation-flanked on one side and
+whitespace-flanked on the other can only open (or only close):
+
+```````````````````````````````` example
+~$0.48 vs ~$0.65 per run
+.
+<p>~$0.48 vs ~$0.65 per run</p>
+.
+--fstrikethrough
+````````````````````````````````
+
+```````````````````````````````` example
+~~ not ~~
+.
+<p>~~ not ~~</p>
+.
+--fstrikethrough
+````````````````````````````````
+
+Strike-through may occur inside a word:
+
+```````````````````````````````` example
+a~~b~~c 这是~~你好~~一段话
+.
+<p>a<del>b</del>c 这是<del>你好</del>一段话</p>
+.
+--fstrikethrough
+````````````````````````````````
+
+
 As with regular emphasis delimiters, a new paragraph will cause the cessation
 of parsing a strike-through:
 
