@@ -14,7 +14,32 @@ Changes:
     Thanks to [Daniel Perez Alvarez](https://github.com/unindented) for
     coming with the idea and help with testing.
 
+  * [#449](https://github.com/mity/md4c/pull/449),
+    [#452](https://github.com/mity/md4c/pull/452):
+    Permissive URL autolinks (`MD_FLAG_PERMISSIVEURLAUTOLINKS` flags) now
+    accept single-component hostname, optional port number and rules for
+    the rest of the URL has been somewhat relaxed to recognized even URLs
+    with punctuation in their path, fragment and query parts.
+
+    Contributed by [Gregory Moskaliuk](https://github.com/hryhoriiK97)
+    and [Emanuel Schorsch](https://github.com/emschorsch).
+
 Fixes:
+
+  * [#247](https://github.com/mity/md4c/issues/247),
+    [#300](https://github.com/mity/md4c/issues/300):
+    Preserve tabs inside a verbatim blocks (code, raw HTML).
+
+    (Note: If a tab is partly "outside" and partly "inside" if the block
+    indentation, the "inside" part still gets replaced by spaces.)
+
+    Thanks to [fhgffy](https://github.com/fhgffy) for this.
+
+  * [#367](https://github.com/mity/md4c/issues/367):
+    Fix complicated bracket pairing across link destinations.
+
+    Big thanks to [hengweiyv](https://github.com/hengweiyv) for cracking this
+    hard nut.
 
   * [#435](https://github.com/mity/md4c/issues/435):
     Lower-case `<![cdata` does not make a valid HTML block starting condition.

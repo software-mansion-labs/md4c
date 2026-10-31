@@ -113,7 +113,7 @@ for my $file (@files) {
         my ($from, $to) = @$rule;
         # Word-ish boundaries that also work for patterns ending in a
         # bracket or starting with a dash (e.g. "md4c.[hc]", "-lmd4c").
-        $text =~ s/(?<!\w)$from(?!\w)/$to/g;
+        $text =~ s/(?<![\w-])$from(?!\w)/$to/g;
     }
     next if $text eq $orig;
 
